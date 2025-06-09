@@ -1,6 +1,5 @@
 import { TypeAnimation } from "react-type-animation";
 import "./homepage.css";
-
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
