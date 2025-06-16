@@ -4,9 +4,12 @@ import Upload from "../upload/Upload";
 import { IKImage } from "imagekitio-react";
 import model from "../../lib/gemini";
 import ai from "../../lib/gemini";
+import Markdown from "react-markdown";
 // import { GenerateContentResponse } from "@google/genai";
 
 const NewPrompt = () => {
+  const [question, setQuestion] = useState("");
+  const [answer, setAnswer] = useState("");
   const [img, setImg] = useState({
     isLoading: false,
     error: "",
@@ -17,22 +20,15 @@ const NewPrompt = () => {
 
   useEffect(() => {
     endRef.current.scrollIntoView({ behavior: "smooth" });
-  }, []);
+  }, [question,answer,img.dbData]);
 
-  // const add = async () => {
-  //   const prompt ="write a story about an AI and magic"
-  //   const response = await model.generateContent(prompt);
-  //   const text = response.text();
-  //   console.log(text);
-  // };
-  const add = async () => {
-    const unsafePrompt =
-      "I support Martians Soccer Club and I think " +
-      "Jupiterians Football Club sucks! Write an ironic phrase telling " +
-      "them how I feel about them.";
+ 
+  const add = async (text) => {
+    setQuestion(text);
+
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
-      contents: unsafePrompt,
+      contents: text,
       config: {
         safetySettings: [
           {
@@ -42,8 +38,16 @@ const NewPrompt = () => {
         ],
       },
     });
-
+    setAnswer(response.text);
     console.log(response.text);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const text = e.target.text.value;
+    if (!text) return;
+    add(text);
   };
   return (
     <>
@@ -57,12 +61,18 @@ const NewPrompt = () => {
           transformation={[{ width: 380 }]}
         />
       )}
+      {question && <div className="message user">{question}</div>}
+      {answer && (
+        <div className="message ">
+          <Markdown>{answer}</Markdown>
+        </div>
+      )}
       <div className="endChat" ref={endRef}></div>
-      <button onClick={add}>TEST AI</button>
-      <form className="newForm">
+
+      <form className="newForm" onSubmit={handleSubmit}>
         <Upload setImg={setImg} />
         <input id="file" type="file" multiple={false} hidden />
-        <input type="text" placeholder="Ask anything..." />
+        <input type="text" name="text" placeholder="Ask anything..." />
         <button>
           <img src="/arrow.png" alt="" />
         </button>
