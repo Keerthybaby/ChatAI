@@ -19,7 +19,7 @@ const ChatPage = () => {
           <div className="message">Test message from ai</div>
           <div className="message user">Test message from user</div>
 
-          <div className="message">Test message from ai</div>
+          {/* <div className="message">Test message from ai</div>
           <div className="message user">Test message from user</div>
           <div className="message">Test message from ai</div>
           <div className="message user">Test message from user</div>
@@ -42,7 +42,7 @@ const ChatPage = () => {
           <div className="message">Test message from ai</div>
           <div className="message user">Test message from user</div>
           <div className="message">Test message from ai</div>
-          <div className="message user">Test message from user</div>
+          <div className="message user">Test message from user</div> */}
           <NewPrompt />
          
         </div>
