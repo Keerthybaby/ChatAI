@@ -14,21 +14,35 @@ const NewPrompt = () => {
     isLoading: false,
     error: "",
     dbData: {},
+    aiData: {},
   });
 
   const endRef = useRef(null);
 
   useEffect(() => {
     endRef.current.scrollIntoView({ behavior: "smooth" });
-  }, [question,answer,img.dbData]);
+  }, [question, answer, img.dbData]);
 
- 
   const add = async (text) => {
     setQuestion(text);
 
+    let result;
+
+    if (Object.keys(img.aiData).length > 0) {
+      // If we have an image, create content with both text and image
+      result = [
+        {
+          role: "user",
+          parts: [{ text: text }, img.aiData],
+        },
+      ];
+    } else {
+      result = text;
+    }
+
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: text,
+      model: "gemini-2.0-flash-exp",
+      contents: result,
       config: {
         safetySettings: [
           {
@@ -38,8 +52,14 @@ const NewPrompt = () => {
         ],
       },
     });
+
     setAnswer(response.text);
-    console.log(response.text);
+    setImg({
+      isLoading: false,
+      error: "",
+      dbData: {},
+      aiData: {},
+    });
   };
 
   const handleSubmit = async (e) => {

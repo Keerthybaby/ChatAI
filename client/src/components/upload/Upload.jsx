@@ -1,5 +1,6 @@
 import { IKContext, IKImage, IKUpload } from "imagekitio-react";
 import { useRef } from "react";
+import ai from "../../lib/gemini";
 const urlEndpoint = import.meta.env.VITE_IMAGE_KIT_ENDPOINT;
 const publicKey = import.meta.env.VITE_IMAGE_KIT_PUBLIC_KEY;
 const authenticator = async () => {
@@ -36,9 +37,30 @@ const Upload = ({ setImg }) => {
   };
 
   const onUploadStart = (evt) => {
-    console.log("Start", evt);
-    setImg((prev) => ({ ...prev, isLoading: true }));
+    const file = evt.target.files[0];
+    
+    if (!file) return;
+    
+    setImg((prev) => ({ ...prev, isLoading: true, error: "" }));
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setImg((prev) => ({
+        ...prev,
+        aiData: {
+          inlineData: {
+            data: reader.result.split(",")[1],
+            mimeType: file.type,
+          },
+        },
+      }));
+    };
+    
+   
+    reader.readAsDataURL(file);
   };
+
+ 
   return (
     <IKContext
       urlEndpoint={urlEndpoint}
