@@ -17,6 +17,20 @@ const NewPrompt = () => {
     aiData: {},
   });
 
+  const chat = ai.chats.create({
+    model: "gemini-2.0-flash",
+    history: [
+      {
+        role: "user",
+        parts: [{ text: "Hello" }],
+      },
+      {
+        role: "model",
+        parts: [{ text: "Great to meet you. What would you like to know?" }],
+      },
+    ],
+  });
+
   const endRef = useRef(null);
 
   useEffect(() => {
@@ -26,34 +40,49 @@ const NewPrompt = () => {
   const add = async (text) => {
     setQuestion(text);
 
-    let result;
+    let message;
 
     if (Object.keys(img.aiData).length > 0) {
-      // If we have an image, create content with both text and image
-      result = [
-        {
-          role: "user",
-          parts: [{ text: text }, img.aiData],
-        },
-      ];
+      message = {
+        role: "user",
+        parts: [
+          { text },
+          img.aiData, // { inlineData: ... }
+        ],
+      };
     } else {
-      result = text;
+      message = {
+        role: "user",
+        parts: [{ text }],
+      };
     }
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash-exp",
-      contents: result,
-      config: {
-        safetySettings: [
-          {
-            category: "HARM_CATEGORY_HARASSMENT",
-            threshold: "BLOCK_ONLY_HIGH",
-          },
-        ],
-      },
-    });
+    // const response = await ai.models.generateContent({
+    //   model: "gemini-2.0-flash-exp",
+    //   contents: result,
+    //   config: {
+    //     safetySettings: [
+    //       {
+    //         category: "HARM_CATEGORY_HARASSMENT",
+    //         threshold: "BLOCK_ONLY_HIGH",
+    //       },
+    //     ],
+    //   },
+    // });
 
-    setAnswer(response.text);
+    const response = await chat.sendMessageStream({ message });
+
+    let accumulatedText="";
+
+    for await (const chunk of response) {
+      const chunkText = (chunk.text);
+      console.log("_".repeat(80));
+      console.log(chunkText);
+      accumulatedText += chunkText;
+      setAnswer(accumulatedText);
+    }
+
+   
     setImg({
       isLoading: false,
       error: "",
