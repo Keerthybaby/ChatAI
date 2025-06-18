@@ -29,6 +29,15 @@ const NewPrompt = () => {
         parts: [{ text: "Great to meet you. What would you like to know?" }],
       },
     ],
+    config: {
+      safetySettings: [
+        {
+          category: "HARM_CATEGORY_HARASSMENT",
+          threshold: "BLOCK_ONLY_HIGH",
+        },
+      ],
+      maxOutputTokens: 100,
+    },
   });
 
   const endRef = useRef(null);
@@ -72,17 +81,16 @@ const NewPrompt = () => {
 
     const response = await chat.sendMessageStream({ message });
 
-    let accumulatedText="";
+    let accumulatedText = "";
 
     for await (const chunk of response) {
-      const chunkText = (chunk.text);
+      const chunkText = chunk.text;
       console.log("_".repeat(80));
       console.log(chunkText);
       accumulatedText += chunkText;
       setAnswer(accumulatedText);
     }
 
-   
     setImg({
       isLoading: false,
       error: "",
