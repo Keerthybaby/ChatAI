@@ -13,7 +13,7 @@ const DashboardPage = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ userId,text }),
+      body: JSON.stringify({ text }),
       credentials: "include",
     });
   };

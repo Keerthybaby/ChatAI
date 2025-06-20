@@ -3,8 +3,11 @@ import "./homepage.css";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
+
 const Homepage = () => {
   const [typingStatus, setTypingStatus] = useState("human1");
+
+
   return (
     <div className="homepage">
       <img src="/orbital.png" alt="" className="orbital" />
@@ -18,6 +21,7 @@ const Homepage = () => {
           neque odit!
         </h3>
         <Link to="/dashboard">Get Started</Link>
+      
       </div>
       <div className="right">
         <div className="imgContainer">

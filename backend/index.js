@@ -4,6 +4,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import UserChats from "./models/userChats.js";
 import Chat from "./models/chat.js";
+import { ClerkExpressRequireAuth } from "@clerk/clerk-sdk-node";
 
 const port = process.env.PORT || 3000;
 const app = express();
@@ -37,8 +38,14 @@ app.get("/api/upload", (req, res) => {
   res.send(result);
 });
 
-app.post("/api/chats", async (req, res) => {
-  const { userId, text } = req.body;
+// app.get("/api/test", ClerkExpressRequireAuth(), (req, res) => {
+//   console.log("Success!");
+//   res.send("Success!");
+// });
+
+app.post("/api/chats", ClerkExpressRequireAuth(), async (req, res) => {
+  const userId = req.auth.userId;
+  const { text } = req.body;
   try {
     // CREATE A NEW CHAT
     const newChat = new Chat({
@@ -80,6 +87,24 @@ app.post("/api/chats", async (req, res) => {
     console.log(err);
     res.status(500).send("Error creating chat!");
   }
+});
+
+// app.get("/api/userchats", ClerkExpressRequireAuth(), async (req, res) => {
+//   const userId = req.auth.userId;
+//   try {
+//     const userChats = UserChats.find({ userId });
+//     res.status(200).send(userChats);
+//   } catch (err) {
+//     console.log(err);
+//     res.status(500).send("Error fetching userchats");
+//   }
+// });
+
+
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(401).send("Unauthenticated!");
 });
 
 app.listen(port, () => {
