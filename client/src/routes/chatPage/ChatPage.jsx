@@ -1,8 +1,17 @@
 import { useEffect, useRef } from "react";
 import "./chatPage.css";
 import NewPrompt from "../../components/newPrompt/NewPrompt";
+import { useQuery } from "@tanstack/react-query";
 
 const ChatPage = () => {
+
+  // const { isPending, error, data } = useQuery({
+  //   queryKey: ["repoData"],
+  //   queryFn: () =>
+  //     fetch(`${import.meta.env.VITE_API_URL}/api/userchats`, {
+  //       credentials: "include",
+  //     }).then((res) => res.json()),
+  // });
   
 
   return (
