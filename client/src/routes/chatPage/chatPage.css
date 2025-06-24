@@ -7,7 +7,22 @@
 
   .wrapper {
     flex: 1;
-    overflow: scroll;
+    /* overflow: scroll; */
+
+    overflow: auto;
+    &::-webkit-scrollbar {
+      width: 6px;
+      background-color: #0e0c16;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      background-color: #3a3647;
+      border-radius: 3px;
+    }
+  
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #4a4556;
+    }
     width: 100%;
     display: flex;
     justify-content: center;

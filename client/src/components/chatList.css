@@ -18,12 +18,33 @@
     margin-bottom: 10px;
   }
 
-  .list {
+  /* .list {
     display: flex;
     flex-direction: column;
     overflow: scroll;
+  } */
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    &::-webkit-scrollbar {
+      width: 6px;
+      background-color: #0e0c16;
+    }
+  
+    &::-webkit-scrollbar-thumb {
+      background-color: #3a3647;
+      border-radius: 3px;
+    }
+  
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #4a4556;
+    }
+  
   }
 
+  
   a {
     padding: 10px;
     border-radius: 10px;
